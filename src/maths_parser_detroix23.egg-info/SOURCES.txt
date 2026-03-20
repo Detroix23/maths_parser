@@ -1,0 +1,12 @@
+LICENSE.md
+README.md
+pyproject.toml
+src/maths_parser_detroix23/__init__.py
+src/maths_parser_detroix23/__main__.py
+src/maths_parser_detroix23.egg-info/PKG-INFO
+src/maths_parser_detroix23.egg-info/SOURCES.txt
+src/maths_parser_detroix23.egg-info/dependency_links.txt
+src/maths_parser_detroix23.egg-info/top_level.txt
+src/maths_parser_detroix23/structures/__init__.py
+src/maths_parser_detroix23/structures/operations.py
+src/maths_parser_detroix23/structures/types.py
