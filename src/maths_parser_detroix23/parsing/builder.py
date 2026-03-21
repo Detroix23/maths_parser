@@ -3,7 +3,7 @@
 src/maths_parser_detroix23/parsing/builder.py
 """
 
-from maths_parser_detroix23.structures import defaults, operators, operations
+from maths_parser_detroix23.structures import defaults, tokens, operators, operations
 
 
 class Brick(operations.Operation):
@@ -26,7 +26,7 @@ class Brick(operations.Operation):
 		raise NotImplementedError(f"parsing.builder.Brick.compute() `Brick` can't be computed.")
 	
 
-def central_operation(tokens: list[str]) -> int:
+def central_operation(tokens: list[tokens.Token]) -> int:
 	"""
 	Find the index of the "center of mass", where to cut, when building the operation three.  
 	Thus, to create:

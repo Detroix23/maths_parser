@@ -5,7 +5,7 @@ src/maths_parser_detroix23/parsing/tokens.py
 
 import enum
 
-from maths_parser_detroix23.structures import defaults, tokens
+from maths_parser_detroix23.structures import defaults, types, tokens
 
 class TokenizeErrorLevel(enum.Enum):
 	STRICT = 0
@@ -41,13 +41,25 @@ def is_structural(expression: str) -> bool:
 def parse_token(
 	value: str,
 	errors: TokenizeErrorLevel = TokenizeErrorLevel.STRICT,
-) -> tokens.Token:
+) -> tokens.Token | types.Number:
 	"""
 	From a string `value`, return a `Token`.
 	"""
-	pass
+	token: tokens.Token = tokens.UNKNOWN
 
+	if is_numeric(value):
+		return float(value)
 
+	for model in tokens.tokens:
+		if value in model.representations:
+			token = model
+			break
+	
+	if errors == TokenizeErrorLevel.STRICT and token == tokens.UNKNOWN:
+		print(repr(token))
+		raise SyntaxError(f"parsing.tokens.parse_token() `STRICT` value unknown: `{value}`.")
+
+	return token
 
 def split(
 	expression: str, 
@@ -70,7 +82,7 @@ def split(
 		# print(f"i={cursor}, {character}")
 
 		if is_numeric(character):
-			if not building:
+			if not is_numeric(token):
 				token = ""
 
 			building = True
@@ -88,7 +100,7 @@ def split(
 
 		else:
 			if errors == TokenizeErrorLevel.STRICT:
-				raise SyntaxError(f"parsing.tokens.tokenize() `STRICT` token unknown: `{character}`.")
+				raise SyntaxError(f"parsing.tokens.split() `STRICT` token unknown: `{character}`.")
 
 			elif errors == TokenizeErrorLevel.MARK:
 				if is_numeric(token):
@@ -104,3 +116,9 @@ def split(
 		tokens.append(token)
 
 	return tokens
+
+def tokenize(
+	expression: str, 
+	errors: TokenizeErrorLevel = TokenizeErrorLevel.STRICT,
+) -> list[tokens.Token | types.Number]:
+	return [parse_token(value, errors) for value in split(expression, errors)]

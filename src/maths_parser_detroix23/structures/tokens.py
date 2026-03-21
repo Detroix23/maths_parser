@@ -20,7 +20,7 @@ class Token:
 
 	def __init__(self, representations: list[str]) -> None:
 		"""
-		Initialize a basic `Token` with its `representations`.
+		Initialize a basic `Token` with its `representations` (at least one).
 
 		Also register it`self` into `tokens`.
 		"""
@@ -28,6 +28,12 @@ class Token:
 
 		tokens.append(self)
 	
+	def __str__(self) -> str:
+		"""
+		Returns the first `representations` of the `Token` 
+		"""
+		return self.representations[0]
+
 	def __repr__(self) -> str:
 		"""
 		Returns a string: `Token(representations)`.
