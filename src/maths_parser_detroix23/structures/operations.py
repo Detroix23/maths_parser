@@ -3,19 +3,8 @@
 src/maths_parser_detroix23/structures/operations.py
 """
 
-import enum
+from maths_parser_detroix23.structures import types, operators
 
-from maths_parser_detroix23.structures import types
-
-class Operators2(enum.Enum):
-	"""
-	# `Operators2` of 2-arity.
-	"""
-	ADDITION = 0
-	SUBTRACTION = 1
-	MULTIPLICATION = 2
-	DIVISION = 3
-	EXPONENTIATION = 4
 
 class Operation:
 	"""
@@ -72,13 +61,13 @@ class Arity2(Operation):
 	"""
 	a: Operation
 	b: Operation
-	operator: Operators2
+	operator: operators.Operator
 
 	def __init__(
 		self, 
 		a: Operation, 
 		b: Operation, 
-		operator: Operators2
+		operator: operators.Operator
 	) -> None:
 		self.a = a
 		self.b = b
@@ -86,15 +75,15 @@ class Arity2(Operation):
 
 	def __str__(self) -> str:
 		match self.operator:
-			case Operators2.ADDITION:
+			case operators.ADDITION:
 				return f"({self.a} + {self.b})"
-			case Operators2.SUBTRACTION:
+			case operators.SUBTRACTION:
 				return f"{self.a} - {self.b}"
-			case Operators2.MULTIPLICATION:
+			case operators.MULTIPLICATION:
 				return f"{self.a} * {self.b}"
-			case Operators2.DIVISION:
+			case operators.DIVISION:
 				return f"{self.a} / {self.b}"
-			case Operators2.EXPONENTIATION:
+			case operators.EXPONENTIATION:
 				return f"{self.a} ** {self.b}"
 			case _:
 				raise SyntaxError(
@@ -103,19 +92,19 @@ class Arity2(Operation):
 
 	def compute(self) -> types.Number:
 		match self.operator:
-			case Operators2.ADDITION:
+			case operators.ADDITION:
 				return self.a.compute() + self.b.compute()
-			case Operators2.SUBTRACTION:
+			case operators.SUBTRACTION:
 				return self.a.compute() - self.b.compute()
-			case Operators2.MULTIPLICATION:
+			case operators.MULTIPLICATION:
 				return self.a.compute() * self.b.compute()
-			case Operators2.DIVISION:
+			case operators.DIVISION:
 				return self.a.compute() / self.b.compute()
-			case Operators2.EXPONENTIATION:
+			case operators.EXPONENTIATION:
 				return self.a.compute() ** self.b.compute()
 			case _:
 				raise SyntaxError(
 					f"structures.operations.Arity2.compute() `operator` ({self.operator}) unknown."
 				)
 
-__all__: list[str] = ["Operators2", "Operation", "Arity0", "Arity2"]
+__all__: list[str] = ["Operation", "Arity0", "Arity2"]

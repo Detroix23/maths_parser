@@ -5,7 +5,7 @@ src/maths_parser_detroix23/parsing/tokens.py
 
 import enum
 
-from maths_parser_detroix23.structures import defaults
+from maths_parser_detroix23.structures import defaults, tokens
 
 class TokenizeErrorLevel(enum.Enum):
 	STRICT = 0
@@ -38,12 +38,23 @@ def is_structural(expression: str) -> bool:
 		or expression in defaults.OPERATORS
 	)
 
-def tokenize(
+def parse_token(
+	value: str,
+	errors: TokenizeErrorLevel = TokenizeErrorLevel.STRICT,
+) -> tokens.Token:
+	"""
+	From a string `value`, return a `Token`.
+	"""
+	pass
+
+
+
+def split(
 	expression: str, 
 	errors: TokenizeErrorLevel = TokenizeErrorLevel.STRICT,
 ) -> list[str]:
 	"""
-	Divide the string `expression` into a `list` of `str` tokens:
+	Divide the string `expression` into a `list` of `str` for future tokens:
 	- a number (one token comprises all the digits, and the dot),
 	- an operator,
 	- a parenthesis. 
