@@ -25,6 +25,8 @@ def main() -> None:
 
 	test_central_operation1()
 
+	test_parse1()
+
 def print_list(l: Sequence[object], line: str = " ", end: str = "") -> None:
 	print(f"[{line}", end=end)
 	for element in l:
@@ -71,24 +73,44 @@ def test_token_struct1() -> None:
 	pprint.pprint(tokens.tokens)
 
 def test_central_operation1() -> None:
-	from maths_parser_detroix23.parsing import tokens, builder
+	from maths_parser_detroix23.parsing import tokens, split
 
 	print("\n## Test: Central operation 1.")
 
-	expressions: list[str] = []
-	expressions.append("11+2*32 / 2 - ( 1 +2)")
-	expressions.append("(11+2*32 ) ^ 2.0 - ( 1.1 +2)*(1)")
-	expressions.append("11.232132131")
-	expressions.append("((---))")
-	expressions.append("12312+123/99    02 ")
-
+	expressions: list[str] = [
+		"11+2*32 / 2 - ( 1 +2)",
+		"(11+2*32 ) ^ 2.0 - ( 1.1 +2)*(1)",
+		"11.232132131",
+		"((---))",
+		"12312+123/99    02 ",
+	]
 
 	for expression in expressions:
 		print(expression)
 		token_list: list[Token | types.Number] = tokens.tokenize(expression)
-		print("- ", end="")
+		print("- Tokenized: ", end="")
 		print_list(token_list)
-		centre: int = builder.central_operation(token_list)
-		print(f"- {centre}, {token_list[centre]}")
+		center: int = split.choose(token_list)
+		print(f"- Center: i={center}, {token_list[center]} {type(token_list[center])}")
+
+def test_parse1() -> None:
+	from maths_parser_detroix23.parsing import tokens, builder
+
+	print("\n## Test: Parse 1.")
+
+	expressions: list[str] = [
+		"11+2*32 / 2 - 1 + 2 ",
+		#"(11+2*32 ) ^ 2.0 - ( 1.1 +2)*(1)",
+		"11.232132131",
+		"12312+123/99    02 ",
+	]
+
+	for expression in expressions:
+		print(expression)
+		token_list: list[Token | types.Number] = tokens.tokenize(expression)
+		print("- Tokenized: ", end="")
+		print_list(token_list)
+		parsed: Operation = builder.parse(token_list)
+		print(f"- Parsed: {parsed}")
 
 main()

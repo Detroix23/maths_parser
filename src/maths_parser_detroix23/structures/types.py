@@ -5,12 +5,12 @@ src/maths_parser_detroix23/structures/types.py
 
 from types import UnionType
 
-def in_union(t: type, union: UnionType) -> bool:
+def in_union(value: object, union: UnionType) -> bool:
 	"""
 	Check if type `t` is in `union`.
 	"""
 	for type_union in union.__args__:
-		if t is type_union:
+		if type(value) is type_union:
 			return True
 	
 	return False

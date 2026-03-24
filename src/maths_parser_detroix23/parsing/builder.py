@@ -4,6 +4,7 @@ src/maths_parser_detroix23/parsing/builder.py
 """
 
 from maths_parser_detroix23.structures import types, tokens, operators, operations
+from maths_parser_detroix23.parsing import split
 
 
 class Brick(operations.Operation):
@@ -22,100 +23,44 @@ class Brick(operations.Operation):
 		"""	
 		return f"Brick({self.expression})"
 
-	def compute(self) -> int | float:
+	def compute(self) -> types.Number:
 		raise NotImplementedError(f"parsing.builder.Brick.compute() `Brick` can't be computed.")
-	
 
-def first_operator(token_list: list[tokens.Token | types.Number]) -> int:
-	"""
-	Choose the first operator, ignoring priorities, from `token_list`.  
-	Returns its `int` index. 
-	
-	Example:
-	```
-	[1 + 2 * 3 - 3 * 2]
-	   ↑
-	```
-	"""
-	i: int = 0
-	found: bool = False
 
+def parse(token_list: list[tokens.Token | types.Number]) -> operations.Operation:
+	"""
+	Recursively parse `token_list` into an `Operation`.
+
+	*Base cases*:
+	- Singleton of a `Number` `n` => `Arity0(n)`.
+
+	*Errors*:
+	- Singleton of an `Operator`;
+	- Empty list;
+	- Split is not an `Operator`.
+	"""
+	if len(token_list) == 0:
+		raise ValueError(f"parsing.builder.parse() `token_list` empty.")
+	
 	if len(token_list) == 1:
-		found = True
+		single: tokens.Token | types.Number = token_list[0]
 
-	while not found and i < len(token_list):
-		token: tokens.Token | types.Number = token_list[i]
-
-		if isinstance(token, operators.Operator):
-			found = True
-
-		if not found:
-			i += 1
-
-	return i
-
-
-
-
-def first_priority(token_list: list[tokens.Token | types.Number]) -> int:
-	"""
-	Choose the first operator, respecting priorities, from `token_list`.  
-	Returns its `int` index. 
+		if types.in_union(single, types.Number):
+			return operations.Arity0(single)  # pyright: ignore[reportArgumentType]
+		else:
+			raise ArithmeticError(f"parsing.builder.parse() One element `token_list` not a number ({repr(single)}).")
 	
-	Example:
-	```
-	[1 + 2 * 3 - 3 * 2]
-	       ↑
-	```
-	"""
-	i: int = 0
-	found: bool = False
-	next_operator: tokens.Token | None
-	j: int = 0
+	split_index: int = split.choose(token_list)
+	if split_index >= len(token_list):
+		raise IndexError(f"parsing.builder.parse() `token_list` = {token_list}, `split_index` = {split_index}.")
 
-	if len(token_list) == 1:
-		found = True
+	split_operator: tokens.Token | types.Number = token_list[split_index]
 
-	while not found and i < len(token_list):
-		token: tokens.Token | types.Number = token_list[i]
+	if not isinstance(split_operator, operators.Operator):
+		raise ArithmeticError(f"parsing.builder.parse() Split on position i={split_index} is not an `Operator` ({split_operator}).")
 
-		if isinstance(token, operators.Operator):	
-			next_operator = None
-			j = i + 1
-			while next_operator is None and j < len(token_list):
-				next_operator_potential: tokens.Token | types.Number = token_list[j] 
-				if isinstance(next_operator_potential, operators.Operator):
-					next_operator = next_operator_potential
-
-				j += 1
-			
-			found = (
-				next_operator is None
-				or token.priority >= next_operator.priority
-			)
-
-		if not found:
-			i += 1
-
-	return i
-
-def central_operation(token_list: list[tokens.Token | types.Number]) -> int:
-	"""
-	Find the index of the "center of mass", where to cut, when building the operation three.  
-	Thus, to create:
-	```python
-	Arity2(Brick("..."), Brick("..."), "center of mass operator")
-	```
-	
-	Different methods of determination:
-	1. (**Current**) Choose the first operator, respecting priorities.
-	2. Choose the first operator, ignoring priorities.
-	3. Choose the first irreducible, an operation between plain numbers:
-
-	If `token_list` is of length 1, **returns 0**, to account for single number token list.
-	"""
-	if len(token_list) == 1:
-		return 0
-	
-	return first_operator(token_list)
-
+	return operations.Arity2(
+		parse(token_list[:split_index]),
+		parse(token_list[split_index + 1:]),
+		split_operator,
+	)

@@ -50,6 +50,9 @@ class Arity0(Operation):
 	def __str__(self) -> str:
 		return f"{self.number}"
 
+	def __repr__(self) -> str:
+		return f"Arity0({self.number})"
+
 	def compute(self) -> types.Number:
 		return self.number
 
@@ -78,17 +81,20 @@ class Arity2(Operation):
 			case operators.ADDITION:
 				return f"({self.a} + {self.b})"
 			case operators.SUBTRACTION:
-				return f"{self.a} - {self.b}"
+				return f"({self.a} - {self.b})"
 			case operators.MULTIPLICATION:
-				return f"{self.a} * {self.b}"
+				return f"({self.a} * {self.b})"
 			case operators.DIVISION:
-				return f"{self.a} / {self.b}"
+				return f"({self.a} / {self.b})"
 			case operators.EXPONENTIATION:
-				return f"{self.a} ** {self.b}"
+				return f"({self.a} ** {self.b})"
 			case _:
 				raise SyntaxError(
 					f"structures.operations.Arity2.compute() `operator` ({self.operator}) unknown."
 				)
+
+	def __repr__(self) -> str:
+		return f"Arity2(a={repr(self.a)}, b={repr(self.b)}, operator={self.operator})"
 
 	def compute(self) -> types.Number:
 		match self.operator:
