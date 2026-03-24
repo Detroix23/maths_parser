@@ -40,9 +40,9 @@ class Operator(tokens.Token):
 
 ADDITION: Final[Operator] = Operator(2, 1, ["+"])
 SUBTRACTION: Final[Operator] = Operator(2, 1, ["-"])
-MULTIPLICATION: Final[Operator] = Operator(2, 1, ["*"])
-DIVISION: Final[Operator] = Operator(2, 1, ["/"])
-EXPONENTIATION: Final[Operator] = Operator(2, 1, ["^", "**"])
+MULTIPLICATION: Final[Operator] = Operator(2, 2, ["*"])
+DIVISION: Final[Operator] = Operator(2, 2, ["/"])
+EXPONENTIATION: Final[Operator] = Operator(2, 3, ["^", "**"])
 
 
 __all__: list[str] = [

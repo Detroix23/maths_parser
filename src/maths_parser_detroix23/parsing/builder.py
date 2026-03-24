@@ -3,7 +3,7 @@
 src/maths_parser_detroix23/parsing/builder.py
 """
 
-from maths_parser_detroix23.structures import defaults, tokens, operators, operations
+from maths_parser_detroix23.structures import types, tokens, operators, operations
 
 
 class Brick(operations.Operation):
@@ -26,7 +26,80 @@ class Brick(operations.Operation):
 		raise NotImplementedError(f"parsing.builder.Brick.compute() `Brick` can't be computed.")
 	
 
-def central_operation(tokens: list[tokens.Token]) -> int:
+def first_operator(token_list: list[tokens.Token | types.Number]) -> int:
+	"""
+	Choose the first operator, ignoring priorities, from `token_list`.  
+	Returns its `int` index. 
+	
+	Example:
+	```
+	[1 + 2 * 3 - 3 * 2]
+	   ↑
+	```
+	"""
+	i: int = 0
+	found: bool = False
+
+	if len(token_list) == 1:
+		found = True
+
+	while not found and i < len(token_list):
+		token: tokens.Token | types.Number = token_list[i]
+
+		if isinstance(token, operators.Operator):
+			found = True
+
+		if not found:
+			i += 1
+
+	return i
+
+
+
+
+def first_priority(token_list: list[tokens.Token | types.Number]) -> int:
+	"""
+	Choose the first operator, respecting priorities, from `token_list`.  
+	Returns its `int` index. 
+	
+	Example:
+	```
+	[1 + 2 * 3 - 3 * 2]
+	       ↑
+	```
+	"""
+	i: int = 0
+	found: bool = False
+	next_operator: tokens.Token | None
+	j: int = 0
+
+	if len(token_list) == 1:
+		found = True
+
+	while not found and i < len(token_list):
+		token: tokens.Token | types.Number = token_list[i]
+
+		if isinstance(token, operators.Operator):	
+			next_operator = None
+			j = i + 1
+			while next_operator is None and j < len(token_list):
+				next_operator_potential: tokens.Token | types.Number = token_list[j] 
+				if isinstance(next_operator_potential, operators.Operator):
+					next_operator = next_operator_potential
+
+				j += 1
+			
+			found = (
+				next_operator is None
+				or token.priority >= next_operator.priority
+			)
+
+		if not found:
+			i += 1
+
+	return i
+
+def central_operation(token_list: list[tokens.Token | types.Number]) -> int:
 	"""
 	Find the index of the "center of mass", where to cut, when building the operation three.  
 	Thus, to create:
@@ -36,32 +109,13 @@ def central_operation(tokens: list[tokens.Token]) -> int:
 	
 	Different methods of determination:
 	1. (**Current**) Choose the first operator, respecting priorities.
-	```
-	[1 + 2 * 3 - 3 * 2]
-	       ↑
-	```
-	2. Choose the irreducible, an operation between plain numbers:
-	```
-	[(1 + (2 * (3 - 1)) / (2 - 1)]
-	              ↑
-	```
+	2. Choose the first operator, ignoring priorities.
+	3. Choose the first irreducible, an operation between plain numbers:
+
+	If `token_list` is of length 1, **returns 0**, to account for single number token list.
 	"""
-	i: int = 0
-	found: bool = False
-	next_operator: str | None
-	j: int = 0
+	if len(token_list) == 1:
+		return 0
+	
+	return first_operator(token_list)
 
-	while not found and i < len(tokens):
-		if tokens[i] in defaults.OPERATORS:
-			next_operator = None
-			j = i + 1
-			while next_operator is None and j < len(tokens):
-				if tokens[i] in defaults.OPERATORS:
-					next_operator = tokens[i] 
-
-			found = (
-				next_operator is None
-				or operators.PRIORITIES[tokens[i]] >= operators.PRIORITIES[next_operator]
-			)
-
-		i += 1
