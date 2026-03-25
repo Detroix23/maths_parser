@@ -10,6 +10,7 @@ from maths_parser_detroix23.structures import types
 from maths_parser_detroix23.structures.tokens import *
 from maths_parser_detroix23.structures.operations import *
 from maths_parser_detroix23.structures.operators import *
+from maths_parser_detroix23.structures.tokens import Block
 
 def main() -> None:
 	"""
@@ -116,23 +117,29 @@ def test_parenthesis_package1() -> None:
 		print(f"- {repr(packaged)}")
 
 def test_parse1() -> None:
-	from maths_parser_detroix23.parsing import tokens, builder
+	from maths_parser_detroix23.parsing import tokens, parenthesis, builder
 
 	print("\n## Test: Parse 1.")
 
 	expressions: list[str] = [
 		"11+2*32 / 2 - 1 + 2 ",
-		#"(11+2*32 ) ^ 2.0 - ( 1.1 +2)*(1)",
+		"(11+2*32 ) ^ 2.0 - ( 1.1 +2)*(1)",
+		"(2 - 1) * (4 - 12 / 3)",
 		"11.232132131",
 		"12312+123/99    02 ",
 	]
 
 	for expression in expressions:
 		print(expression)
+		
 		token_list: list[Token | types.Number] = tokens.tokenize(expression)
 		print("- Tokenized: ", end="")
 		print_list(token_list)
-		parsed: Operation = builder.parse(token_list)
+		
+		block: Block = parenthesis.package(token_list)
+		print(f"- Packaged: {block}")
+
+		parsed: Operation = builder.parse(block)
 		print(f"- Parsed: {parsed}")
 		print(f" Recomputed: {parsed.compute()}")
 

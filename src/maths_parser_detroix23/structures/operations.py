@@ -87,7 +87,7 @@ class Arity2(Operation):
 		if self.operator not in operators.operators:
 			raise SyntaxError(f"structures.operations.Arity2.compute() `operator` ({self.operator}) unknown.")
 		
-		return f"{self.a} {self.operator} {self.b}"
+		return f"({self.a} {self.operator} {self.b})"
 
 	def __repr__(self) -> str:
 		return f"Arity2(a={repr(self.a)}, b={repr(self.b)}, operator={repr(self.operator)})"
