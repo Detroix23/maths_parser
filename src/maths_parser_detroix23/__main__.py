@@ -25,6 +25,8 @@ def main() -> None:
 
 	test_central_operation1()
 
+	test_parenthesis_package1()
+
 	test_parse1()
 
 def print_list(l: Sequence[object], line: str = " ", end: str = "") -> None:
@@ -93,6 +95,26 @@ def test_central_operation1() -> None:
 		center: int = split.choose(token_list)
 		print(f"- Center: i={center}, {token_list[center]} {type(token_list[center])}")
 
+def test_parenthesis_package1() -> None:
+	from maths_parser_detroix23.parsing import tokens, parenthesis
+
+	print("\n## Parenthesis packaging.")
+
+	expressions: list[str] = [
+		"1 + 2 * 3", 
+		"( 5 + 2 * 3 - 88 )", 
+		"1 + ( 1 )", 
+		"5-3*( 9 - ( ( 1 + 6 ) / 2 ) )", 
+		"1 + ( 2 * 3 )", 
+		"()", 
+	]
+
+	for expression in expressions:
+		packaged: Block = parenthesis.package(tokens.tokenize(expression))
+		print(expression)
+		print(f"- {packaged}")
+		print(f"- {repr(packaged)}")
+
 def test_parse1() -> None:
 	from maths_parser_detroix23.parsing import tokens, builder
 
@@ -112,5 +134,6 @@ def test_parse1() -> None:
 		print_list(token_list)
 		parsed: Operation = builder.parse(token_list)
 		print(f"- Parsed: {parsed}")
+		print(f" Recomputed: {parsed.compute()}")
 
 main()

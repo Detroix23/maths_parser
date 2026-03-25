@@ -5,7 +5,7 @@ src/maths_parser_detroix23/structures/tokens.py
 
 from typing import Final
 
-from maths_parser_detroix23.structures import defaults
+from maths_parser_detroix23.structures import defaults, types
 
 tokens: list[Token] = []
 """ Register all `Token`s: one centralized access. """
@@ -40,6 +40,25 @@ class Token:
 		"""
 		return f"Token(representations={self.representations})"
 
+
+class Block(Token):
+    """
+    Parenthesis priority block.
+    - String expression
+    - Without the parenthesis characters
+    """
+    expression: types.Tokens
+    depth: int
+    
+    def __init__(self, expression: types.Tokens, depth: int) -> None:
+        self.expression = expression
+        self.depth = depth
+    
+    def __str__(self) -> str:
+        return f"({' '.join([str(value) for value in self.expression])})"
+    
+    def __repr__(self) -> str:
+        return f"Block({self.expression}, depth={self.depth})"
 
 UNKNOWN: Final[Token] = Token([defaults.UNKNOWN_TOKEN])
 BLOCK_OPENING: Final[Token] = Token(["("])

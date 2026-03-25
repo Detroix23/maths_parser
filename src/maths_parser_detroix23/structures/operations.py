@@ -9,30 +9,35 @@ from maths_parser_detroix23.structures import types, operators
 class Operation:
 	"""
 	# `Operation` trait.
-	Define the backbone, most basic behaviors.
+	Define the backbone, a Basic Abstract Class, for the most basic behaviors.
 	"""
 	def __init__(self) -> None:
 		"""
 		Initialize an operation.  
-		As is, it must be overloaded or it will raise a `NotImplementedError`.
 		"""	
-		raise NotImplementedError(
-			"structures.operations.Operation.__init__() `Operation` must be overloaded."
-		)
 	
 	def __str__(self) -> str:
 		"""
 		Return a human and nicely readable representation of the `Operation`.  
-		As is, it must be overloaded or it will raise a `NotImplementedError`.
+		In Base Class `Operation`, it must be overloaded or it will raise a `NotImplementedError`.
 		"""
 		raise NotImplementedError(
-			"structures.operations.Operation.compute() `Operation` must be overloaded."
+			"structures.operations.Operation.__str__() `Operation` must be overloaded."
+		)
+
+	def __repr__(self) -> str:
+		"""
+		Return a debug display: name of the highest class and its arguments.  
+		In Base Class `Operation`, it must be overloaded or it will raise a `NotImplementedError`.
+		"""
+		raise NotImplementedError(
+			"structures.operations.Operation.__repr__() `Operation` must be overloaded."
 		)
 
 	def compute(self) -> types.Number:
 		"""
 		Compute and return the result of the operation recursively.  
-		As is, it must be overloaded or it will raise a `NotImplementedError`.
+		In Base Class `Operation`, it must be overloaded or it will raise a `NotImplementedError`.
 		"""
 		raise NotImplementedError(
 			"structures.operations.Operation.compute() `Operation` must be overloaded."
@@ -45,6 +50,7 @@ class Arity0(Operation):
 	number: types.Number
 
 	def __init__(self, number: types.Number) -> None:
+		super().__init__()
 		self.number = number
 
 	def __str__(self) -> str:
@@ -72,29 +78,19 @@ class Arity2(Operation):
 		b: Operation, 
 		operator: operators.Operator
 	) -> None:
+		super().__init__()
 		self.a = a
 		self.b = b
 		self.operator = operator
 
 	def __str__(self) -> str:
-		match self.operator:
-			case operators.ADDITION:
-				return f"({self.a} + {self.b})"
-			case operators.SUBTRACTION:
-				return f"({self.a} - {self.b})"
-			case operators.MULTIPLICATION:
-				return f"({self.a} * {self.b})"
-			case operators.DIVISION:
-				return f"({self.a} / {self.b})"
-			case operators.EXPONENTIATION:
-				return f"({self.a} ** {self.b})"
-			case _:
-				raise SyntaxError(
-					f"structures.operations.Arity2.compute() `operator` ({self.operator}) unknown."
-				)
+		if self.operator not in operators.operators:
+			raise SyntaxError(f"structures.operations.Arity2.compute() `operator` ({self.operator}) unknown.")
+		
+		return f"{self.a} {self.operator} {self.b}"
 
 	def __repr__(self) -> str:
-		return f"Arity2(a={repr(self.a)}, b={repr(self.b)}, operator={self.operator})"
+		return f"Arity2(a={repr(self.a)}, b={repr(self.b)}, operator={repr(self.operator)})"
 
 	def compute(self) -> types.Number:
 		match self.operator:

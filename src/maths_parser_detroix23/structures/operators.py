@@ -36,7 +36,7 @@ class Operator(tokens.Token):
 
 	def __repr__(self) -> str:
 		return f"Operator(arity={self.arity}, priority={self.priority}, representations={self.representations})"
-
+	
 
 ADDITION: Final[Operator] = Operator(2, 1, ["+"])
 SUBTRACTION: Final[Operator] = Operator(2, 1, ["-"])
