@@ -1,7 +1,7 @@
 [project]
 name = "maths_parser_detroix23"
 version = "0.1.0"
-description = "Python mathematics parser."
+description = "Universal mathematics parser for Python."
 authors = [
     { name="Detroix23", email="detroix23@gmail.com" }
 ]
@@ -18,7 +18,11 @@ license = "CC-BY-4.0"
 license-files = ["LICENSE.md"]
 
 [project.urls]
-Repository = "https://github.com/Detroix23/maths_parser_py"
+Repository = "https://github.com/Detroix23/maths_parser"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
 
 [build-system]
 requires = ["setuptools"]

@@ -1,7 +1,8 @@
-# Python mathematics parser.
-
-Less optimized but easier to code in Python.
+# Mathematics parser.
+Two version:
+- Python;
+- Rust.
 
 ## Implementations:
 - Binary threes `Operations`.
-- Direct linear calculus formatter.
+- Direct first order calculus formatter.
