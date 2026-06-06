@@ -7,7 +7,7 @@ from typing import Final
 
 from maths_parser_detroix23.structures import tokens
 
-operators: list[Operator] = []
+operators: list['Operator'] = []
 """ Register all `Operator`s: centralized list. """
 
 class Operator(tokens.Token):

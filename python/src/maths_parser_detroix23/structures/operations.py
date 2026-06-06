@@ -63,7 +63,6 @@ class Arity0(Operation):
 		return self.number
 
 
-
 class Arity2(Operation):
 	"""
 	# `Arity2`: 2 argument operation.

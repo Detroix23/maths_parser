@@ -7,8 +7,8 @@ from typing import Final
 
 from maths_parser_detroix23.structures import defaults, types
 
-tokens: list[Token] = []
-""" Register all `Token`s: one centralized access. """
+tokens: list['Token'] = []
+""" Registers all `Token`s: one centralized access. """
 
 class Token:
 	"""
@@ -69,4 +69,5 @@ class Block(Token):
 UNKNOWN: Final[Token] = Token([defaults.UNKNOWN_TOKEN])
 BLOCK_OPENING: Final[Token] = Token(["("])
 BLOCK_CLOSING: Final[Token] = Token([")"])
-	
+
+__all__: list[str] = ["Token", "UNKNOWN", "BLOCK_OPENING", "BLOCK_CLOSING"]

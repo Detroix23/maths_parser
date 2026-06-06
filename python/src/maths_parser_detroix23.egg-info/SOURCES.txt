@@ -7,6 +7,14 @@ src/maths_parser_detroix23.egg-info/PKG-INFO
 src/maths_parser_detroix23.egg-info/SOURCES.txt
 src/maths_parser_detroix23.egg-info/dependency_links.txt
 src/maths_parser_detroix23.egg-info/top_level.txt
+src/maths_parser_detroix23/parsing/__init__.py
+src/maths_parser_detroix23/parsing/builder.py
+src/maths_parser_detroix23/parsing/parenthesis.py
+src/maths_parser_detroix23/parsing/split.py
+src/maths_parser_detroix23/parsing/tokens.py
 src/maths_parser_detroix23/structures/__init__.py
+src/maths_parser_detroix23/structures/defaults.py
 src/maths_parser_detroix23/structures/operations.py
+src/maths_parser_detroix23/structures/operators.py
+src/maths_parser_detroix23/structures/tokens.py
 src/maths_parser_detroix23/structures/types.py
